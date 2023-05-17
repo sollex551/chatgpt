@@ -1,0 +1,60 @@
+import openai
+from aiogram import Dispatcher, executor, Bot
+import asyncio
+import os
+from aiogram.types import Message
+import time
+import random
+
+stikers = ['CAACAgQAAxkBAAEItZFkRsRt9qzqWSXeNaxaY3RR1BKp6wAC-Q0AAse0kVMlfVlz7AesOi8E',
+           'CAACAgIAAxkBAAEItY9kRsRhsTYVJ6SjZTOFd9qTvbEAARsAAp0HAAJG-6wE_CidArUMVEYvBA',
+           'CAACAgIAAxkBAAEItZhkRsVVV2JLEW5iReVIpsXEcsnQtQACwx0AAnh-KEm5L-5yu8VR1y8E',
+           'CAACAgIAAxkBAAEItZpkRsWECgaztg-4lnEGnPPJ9bjaDQACoxgAArvwwEuKzMnbs96XFy8E',
+           'CAACAgIAAxkBAAEItZxkRsWQhw2A_jRVlhBP6lxorVXJTAACBQEAArbVuDdyzRm74lVSNy8E',
+           'CAACAgUAAxkBAAEItZ5kRsWiLr2uv4wJZD_2Fo5L6CcNEwAC0gEAAt8fchloLTvKpwQM6y8E',
+           'CAACAgIAAxkBAAEI4FVkVl0yWz3SIwFxkT8FK-32x05HQQAC2hEAAg4maEmCnzRR1P04lS8E']
+
+openai.api_key = 'YOUR_KEY
+
+TOKEN = 'YOUR_TOKEN'
+
+bot = Bot(TOKEN)
+
+dp = Dispatcher(bot)
+
+
+
+@dp.message_handler(commands=['start'])
+async def start(message: Message):
+    is_subscribed = await check_subscription(message.from_user.id)
+    full_name = message.from_user.full_name
+
+    await bot.send_message(message.from_user.id,
+                               f'Здравствуйте {full_name}\nВас приветствует  Чат гпт бот.'  ) # Отправляем сообщение при старте
+
+
+
+@dp.message_handler(commands=['help']) # обрабатываем команду help
+async def command_help(message: Message): 
+    full_name = message.from_user.full_name # узнаем имя 
+    await message.answer(f'{full_name} Обратитесь в тех поддержку для помощи  (@your user)')
+
+
+@dp.message_handler(content_types=['text']) # Обраатываем текстовый запрос
+async def handle_message(message: Message):
+# Делаем запрос к openai
+    response = openai.Completion.create( 
+        engine="text-davinci-003", # можете поменять версию, и все настроить под себя
+        prompt=message.text,
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
+    chat_id = message.chat.id
+    # Отправляем ответ от чат гпт
+    await bot.send_message(chat_id, f'*Ответ на вопрос*    : `{response.choices[0].text}`\n\n'
+                                    f'*Ваш вопрос:* \n\n `{message.text}`', parse_mode='MARKDOWN')
+
+
+executor.start_polling(dp)
