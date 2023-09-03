@@ -1,4 +1,5 @@
 # chatgpt
-simple chat gpt bot
-for work you need:
-Change telegram and cha-gpt Token on yours
+Простой бот с нейросетью chat-gpt
+<b> Для работы нужно <b/>:
+1.Заменить токен бота на свой
+2.Заменить open ai api. Взять можно с офицального сайта гит хаб 
