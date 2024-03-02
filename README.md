@@ -10,12 +10,13 @@
    git clone https://github.com/sollex551/chatgpt
 2. Установите зависимости:
 
-pip install aiogram openai
+   ```bash
+   pip install aiogram==2.25.1 openai
 
 3. Установите переменные среды:
 
 YOUR_TELEGRAM_BOT - токен вашего телеграм бота
 Your-openai-TOKEN - токен вашего OpenAI API
 Запустите бота:
-
-python bot.py
+   ```bash
+   python bot.py
